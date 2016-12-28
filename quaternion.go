@@ -8,16 +8,12 @@ This project is licensed under the terms of the MIT license.
 
 package quaternion
 
-import (
-	"math"
-)
-
 // Quaternion represents a quaternion W+X*i+Y*j+Z*k
 type Quaternion struct {
-	W float64 // Scalar component
-	X float64 // i component
-	Y float64 // j component
-	Z float64 // k component
+	W float32 // Scalar component
+	X float32 // i component
+	Y float32 // j component
+	Z float32 // k component
 }
 
 // Conj returns the conjugate of a Quaternion (W,X,Y,Z) -> (W,-X,-Y,-Z)
@@ -31,17 +27,17 @@ func Conj(qin Quaternion) Quaternion {
 }
 
 // Norm2 returns the L2-Norm of a Quaternion (W,X,Y,Z) -> W*W+X*X+Y*Y+Z*Z
-func Norm2(qin Quaternion) float64 {
+func Norm2(qin Quaternion) float32 {
 	return qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z
 }
 
 // Norm returns the L1-Norm of a Quaternion (W,X,Y,Z) -> Sqrt(W*W+X*X+Y*Y+Z*Z)
-func Norm(qin Quaternion) float64 {
-	return math.Sqrt(qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z)
+func Norm(qin Quaternion) float32 {
+	return Sqrt(qin.W*qin.W + qin.X*qin.X + qin.Y*qin.Y + qin.Z*qin.Z)
 }
 
 // Scalar returns a scalar-only Quaternion representation of a float (W,0,0,0)
-func Scalar(w float64) Quaternion {
+func Scalar(w float32) Quaternion {
 	return Quaternion{W: w}
 }
 
@@ -60,7 +56,7 @@ func Sum(qin ...Quaternion) Quaternion {
 // Prod returns the non-commutative product of any number of Quaternions
 func Prod(qin ...Quaternion) Quaternion {
 	qout := Quaternion{1, 0, 0, 0}
-	var w, x, y, z float64
+	var w, x, y, z float32
 	for _, q := range qin {
 		w = qout.W*q.W - qout.X*q.X - qout.Y*q.Y - qout.Z*q.Z
 		x = qout.W*q.X + qout.X*q.W + qout.Y*q.Z - qout.Z*q.Y
@@ -85,32 +81,32 @@ func Inv(qin Quaternion) Quaternion {
 }
 
 // Euler returns the Euler angles phi, theta, psi corresponding to a Quaternion
-func Euler(q Quaternion) (float64, float64, float64) {
+func Euler(q Quaternion) (float32, float32, float32) {
 	r := Unit(q)
-	phi := math.Atan2(2*(r.W*r.X+r.Y*r.Z), 1-2*(r.X*r.X+r.Y*r.Y))
-	theta := math.Asin(2 * (r.W*r.Y - r.Z*r.X))
-	psi := math.Atan2(2*(r.X*r.Y+r.W*r.Z), 1-2*(r.Y*r.Y+r.Z*r.Z))
+	phi := Atan2(2*(r.W*r.X+r.Y*r.Z), 1-2*(r.X*r.X+r.Y*r.Y))
+	theta := Asin(2 * (r.W*r.Y - r.Z*r.X))
+	psi := Atan2(2*(r.X*r.Y+r.W*r.Z), 1-2*(r.Y*r.Y+r.Z*r.Z))
 	return phi, theta, psi
 }
 
 // FromEuler returns a Quaternion corresponding to Euler angles phi, theta, psi
-func FromEuler(phi, theta, psi float64) Quaternion {
+func FromEuler(phi, theta, psi float32) Quaternion {
 	q := Quaternion{}
-	q.W = math.Cos(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) +
-		math.Sin(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
-	q.X = math.Sin(phi/2)*math.Cos(theta/2)*math.Cos(psi/2) -
-		math.Cos(phi/2)*math.Sin(theta/2)*math.Sin(psi/2)
-	q.Y = math.Cos(phi/2)*math.Sin(theta/2)*math.Cos(psi/2) +
-		math.Sin(phi/2)*math.Cos(theta/2)*math.Sin(psi/2)
-	q.Z = math.Cos(phi/2)*math.Cos(theta/2)*math.Sin(psi/2) -
-		math.Sin(phi/2)*math.Sin(theta/2)*math.Cos(psi/2)
+	q.W = Cos(phi/2)*Cos(theta/2)*Cos(psi/2) +
+		Sin(phi/2)*Sin(theta/2)*Sin(psi/2)
+	q.X = Sin(phi/2)*Cos(theta/2)*Cos(psi/2) -
+		Cos(phi/2)*Sin(theta/2)*Sin(psi/2)
+	q.Y = Cos(phi/2)*Sin(theta/2)*Cos(psi/2) +
+		Sin(phi/2)*Cos(theta/2)*Sin(psi/2)
+	q.Z = Cos(phi/2)*Cos(theta/2)*Sin(psi/2) -
+		Sin(phi/2)*Sin(theta/2)*Cos(psi/2)
 	return q
 }
 
 // RotMat returns the rotation matrix (as float array) corresponding to a Quaternion
-func RotMat(qin Quaternion) [3][3]float64 {
+func RotMat(qin Quaternion) [3][3]float32 {
 	q := Unit(qin)
-	m := [3][3]float64{}
+	m := [3][3]float32{}
 	m[0][0] = 1 - 2*(q.Y*q.Y+q.Z*q.Z)
 	m[0][1] = 2 * (q.X*q.Y - q.W*q.Z)
 	m[0][2] = 2 * (q.W*q.Y + q.X*q.Z)

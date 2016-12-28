@@ -1,3 +1,8 @@
+# Fork information
+
+Forked form https://github.com/westphae/quaternion
+Uses Float32 instead of 64 for Intel Edison compat.
+
 # quaternion
 Quaternion math in golang
 

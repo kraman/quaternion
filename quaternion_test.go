@@ -33,11 +33,11 @@ var (
 	q6  = Quaternion{0.0625, 0.0625, 0.0625, -0.0625}
 	q7  = Quaternion{0.24765262787484427, 0.2940044459739585, 0.3943046179925829, 0.8347175749221727}
 	q8  = Quaternion{-0.7904669075670613, 0.44891659738265544, -0.3627631346111533, 0.205033813803568}
-	q9  = Quaternion{math.Cos(math.Pi / 2), math.Sin(math.Pi/2) / math.Sqrt(3),
-		math.Sin(math.Pi/2) / math.Sqrt(3), -math.Sin(math.Pi/2) / math.Sqrt(3)}
-	m = [3][3]float64{[3]float64{-0.333333333, 0.666666667, -0.666666667},
-		[3]float64{0.666666667, -0.333333333, -0.666666667},
-		[3]float64{-0.666666667, -0.666666667, -0.333333333}}
+	q9  = Quaternion{Cos(math.Pi / 2), Sin(math.Pi/2) / Sqrt(3),
+		Sin(math.Pi/2) / Sqrt(3), -Sin(math.Pi/2) / Sqrt(3)}
+	m = [3][3]float32{[3]float32{-0.333333333, 0.666666667, -0.666666667},
+		[3]float32{0.666666667, -0.333333333, -0.666666667},
+		[3]float32{-0.666666667, -0.666666667, -0.333333333}}
 )
 
 func TestScalarSum(t *testing.T) {
@@ -126,19 +126,19 @@ func TestInv(t *testing.T) {
 
 func TestEuler(t *testing.T) {
 	phi, theta, psi := Euler(q7)
-	if math.Abs(phi-1.0) > 1e-6 ||
-		math.Abs(theta+0.3) > 1e-6 ||
-		math.Abs(psi-2.4) > 1e-6 {
+	if Abs(phi-1.0) > 1e-6 ||
+		Abs(theta+0.3) > 1e-6 ||
+		Abs(psi-2.4) > 1e-6 {
 		t.Fail()
 	}
 }
 
 func TestFromEuler(t *testing.T) {
 	q := FromEuler(-1.2, 0.4, 5.5)
-	if math.Abs(q.W-q8.W) > 1e-6 ||
-		math.Abs(q.X-q8.X) > 1e-6 ||
-		math.Abs(q.Y-q8.Y) > 1e-6 ||
-		math.Abs(q.Z-q8.Z) > 1e-6 {
+	if Abs(q.W-q8.W) > 1e-6 ||
+		Abs(q.X-q8.X) > 1e-6 ||
+		Abs(q.Y-q8.Y) > 1e-6 ||
+		Abs(q.Z-q8.Z) > 1e-6 {
 		t.Fail()
 	}
 
@@ -148,7 +148,7 @@ func TestRotMat(t *testing.T) {
 	mm := RotMat(q9)
 	for i, x := range mm {
 		for j, y := range x {
-			if math.Abs(m[i][j]-y) > 1e-6 {
+			if Abs(m[i][j]-y) > 1e-6 {
 				t.Fail()
 			}
 		}
